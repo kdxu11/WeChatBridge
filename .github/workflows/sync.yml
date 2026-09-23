@@ -1,0 +1,26 @@
+name: Scheduled Fork Sync
+
+on:
+  schedule:
+    # 每天凌晨 0点（UTC时间）自动执行，等同于北京时间上午 8点
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 允许你在页面上点击按钮随时手动触发同步
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+
+      - name: Sync Upstream
+        uses: aormsby/Fork-Sync-With-Upstream-Action@v3.4.1
+        with:
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          # 填入原仓库（上游仓库）的 用户名/仓库名
+          upstream_repository: "freestylefly/WeChatBridge"
+          # 填入你需要同步的分支名（通常是 main 或 master）
+          upstream_branch: "main"
+          target_branch: "main"
+          # 如果原仓库被删除了或出了意外，强制终止而不是报错
+          test_mode: false
