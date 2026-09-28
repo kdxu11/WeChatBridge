@@ -9,6 +9,10 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    # 关键点：赋予 Actions 写入仓库代码的权限
+    permissions:
+      contents: write
+      
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v4
@@ -17,11 +21,7 @@ jobs:
         uses: aormsby/Fork-Sync-With-Upstream-Action@v3.4.1
         with:
           target_repo_token: ${{ secrets.GITHUB_TOKEN }}
-          # 上游仓库（用户名/仓库名）
           upstream_sync_repo: "freestylefly/WeChatBridge"
-          # 上游分支
           upstream_sync_branch: "main"
-          # 本地 Fork 仓库的目标分支
           target_sync_branch: "main"
-          # 设为 false 表示正式同步
           test_mode: false
